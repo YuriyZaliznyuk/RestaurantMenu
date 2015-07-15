@@ -26,15 +26,14 @@ class webServerHandler(BaseHTTPRequestHandler):
                 output += "<html><body>"
                 output += "<h1>Make a New Restaurant</h1>"
                 output += "<form method = 'POST' enctype='multipart/form-data' action = '/restaurants/new'>"
-                output += "<input name = 'newRestaurantName' type = 'text' placeholder = 'New Restaurant Name' > "
+                output += "<input name = 'newRestaurantName' type = 'text' placeholder = 'New Restaurant Name'>"
                 output += "<input type='submit' value='Create'>"
                 output += "</form></html></body>"
                 self.wfile.write(output)
                 return
             if self.path.endswith("/edit"):
                 restaurantIDPath = self.path.split("/")[2]
-                myRestaurantQuery = session.query(Restaurant).filter_by(
-                    id=restaurantIDPath).one()
+                myRestaurantQuery = session.query(Restaurant).filter_by(id = restaurantIDPath).one()
                 if myRestaurantQuery:
                     self.send_response(200)
                     self.send_header('Content-type', 'text/html')
@@ -81,15 +80,13 @@ class webServerHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         try:
             if self.path.endswith("/edit"):
-                ctype, pdict = cgi.parse_header(
-                    self.headers.getheader('content-type'))
+                ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
                 if ctype == 'multipart/form-data':
                     fields = cgi.parse_multipart(self.rfile, pdict)
                     messagecontent = fields.get('newRestaurantName')
                     restaurantIDPath = self.path.split("/")[2]
 
-                    myRestaurantQuery = session.query(Restaurant).filter_by(
-                        id=restaurantIDPath).one()
+                    myRestaurantQuery = session.query(Restaurant).filter_by(id = restaurantIDPath).one()
                     if myRestaurantQuery != []:
                         myRestaurantQuery.name = messagecontent[0]
                         session.add(myRestaurantQuery)
@@ -100,8 +97,7 @@ class webServerHandler(BaseHTTPRequestHandler):
                         self.end_headers()
 
             if self.path.endswith("/restaurants/new"):
-                ctype, pdict = cgi.parse_header(
-                    self.headers.getheader('content-type'))
+                ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
                 if ctype == 'multipart/form-data':
                     fields = cgi.parse_multipart(self.rfile, pdict)
                     messagecontent = fields.get('newRestaurantName')
